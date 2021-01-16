@@ -3,12 +3,11 @@
 
     // change video style
 
-    // var videos = document.getElementsByClassName("html5-video-container");
-    // console.log("here!");
-    // console.log(videos);
+    var videos = document.getElementsByClassName("html5-video-container");
+    console.log("here!");
+    console.log(videos);
     
-    // let frame = videos.item(0);
-    var frame = document.getElementById('player-theater-container');
+    let frame = videos.item(0);
     console.log(frame);
     
     // just place a div at top right
