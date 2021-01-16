@@ -10,6 +10,7 @@
     let frame = videos.item(0);
     console.log(frame.offsetWidth);
 
+    var httpRes = [];
     var comments = [];
     var layers = [];
     var pos = [];
@@ -30,17 +31,15 @@
     function getComments() {
         var url = "https://us-central1-popcorn-comments.cloudfunctions.net/get-popcorn-comments";
         var params = getVideoID(document.URL);
-        console.log(params);
 
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = function() { 
             if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                console.log("success")
                 // callback
                 const obj = JSON.parse(xmlHttp.responseText);
-                console.log(obj.items);
-                comments = obj.items;
-                console.log(comments[0]);
+                // console.log(obj.items);
+                httpRes = obj.items.slice();
+                comments = obj.items.slice();
 
                 // fill comments
                 for (var i = 0; i < 6; i++) {
@@ -76,63 +75,59 @@
         if (params) {
             xmlHttp.open("GET", url+"?video-id="+params, true);
             xmlHttp.send(null);
-
-            console.log("http request fired");
         }
     }
     
  
-     // observe YouTube video pause/play
-     var pauseObserver = new MutationObserver(function(mutations) {
-         mutations.forEach(function(mutation) {
-             if (mutation.type === "attributes" && mutation.attributeName === "aria-label") {
-                 console.log(mutation);
-                 isPaused = !isPaused;
-             }
-         });
-     });
-     
-     pauseObserver.observe(document.getElementsByClassName("ytp-play-button").item(0), {
-         attributes: true
-       });
- 
- 
-     function move() {
- 
-         // TODO: stop/scroll scrolling upon pause/play
-         if (layers.length == 0) {
-             clearInterval(id);
-             pauseObserver.disconnect();
-         }
-         if (!isPaused) {
-             for (var i = 0; i < layers.length; i++) {
-                 if (pos[i] == frame.offsetWidth) {
-         
-                     if (comments.length > 0) {
-                         updateComment(layers[i]);
-                         pos[i] = 0 - layers[i].offsetWidth;
-     
-                         console.log(layers[i].textContent);
-                     } else {
-                         layers.splice(i, 1);
-                         pos.splice(i, 1);
-                     }
-                     
-                 } else {
-                     pos[i]++;
-                     layers[i].style.right = pos[i] + 'px';
-                         
-                 }
-     
-             }
- 
-         }
-     }
-     
-     function updateComment(elem) {
-         elem.textContent = comments.shift();
-         elem.style.right = (-elem.offsetWidth).toString() + "px";
-     }
+    // observe YouTube video pause/play
+    var pauseObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === "attributes" && mutation.attributeName === "aria-label") {
+                console.log(mutation);
+                isPaused = !isPaused;
+            }
+        });
+    });
+    
+    pauseObserver.observe(document.getElementsByClassName("ytp-play-button").item(0), {
+        attributes: true
+    });
+
+
+    function move() {
+        if (layers.length == 0) {
+            clearInterval(id);
+            pauseObserver.disconnect();
+        }
+        if (!isPaused) {
+            for (var i = 0; i < layers.length; i++) {
+                if (pos[i] == frame.offsetWidth) {
+
+                    updateComment(layers[i]);
+                    pos[i] = 0 - layers[i].offsetWidth;
+
+                    console.log(layers[i].textContent);
+                    
+                } else {
+                    pos[i]++;
+                    layers[i].style.right = pos[i] + 'px';
+                        
+                }
+    
+            }
+
+        }
+    }
+    
+    function updateComment(elem) {
+        if (comments.length == 0) {
+            comments = httpRes.slice();
+            console.log("updated");
+            console.log(httpRes.length);
+        }
+        elem.textContent = comments.shift();
+        elem.style.right = (-elem.offsetWidth).toString() + "px";
+    }
 
    
 })();
