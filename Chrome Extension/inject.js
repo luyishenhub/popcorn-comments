@@ -1,14 +1,23 @@
 (function () {
-    // alert("inserted");
+    function httpGetAsync(url, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                console.log("success");
+                callback(xmlHttp.responseText);
+            }
+        }
+        if (params) {
+            xmlHttp.open("GET", url, true);
+            xmlHttp.send(null);
+        }
+    }
 
     // change video style
-
-    var videos = document.getElementsByClassName("html5-video-container");
-    console.log("here!");
-    console.log(videos);
-    
-    let frame = videos.item(0);
-    console.log(frame.offsetWidth);
+    // feature 1: popcorn comments 
+    var frame = document.getElementsByClassName("html5-video-container").item(0);
+    // console.log("here!");
+    // console.log(frame.offsetWidth);
 
     var httpRes = [];
     var comments = [];
@@ -19,7 +28,12 @@
 
     var id;
 
-    getComments();
+
+    var params = getVideoID(document.URL);
+    var commentHTTPURL = "https://us-central1-popcorn-comments.cloudfunctions.net/get-popcorn-comments?video-id=" + params;
+
+
+    // httpGetAsync(commentHTTPURL, loadComments);
  
     // http request to fetch all comments
     function getVideoID(url){
@@ -28,54 +42,36 @@
         return (match&&match[7].length==11)? match[7] : false;
     }
 
-    function getComments() {
-        var url = "https://us-central1-popcorn-comments.cloudfunctions.net/get-popcorn-comments";
-        var params = getVideoID(document.URL);
+    function loadComments(responseText) {
+        const obj = JSON.parse(responseText);
+        // console.log(obj.items);
+        httpRes = obj.items.slice();
+        comments = obj.items.slice();
 
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function() { 
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                // callback
-                const obj = JSON.parse(xmlHttp.responseText);
-                // console.log(obj.items);
-                httpRes = obj.items.slice();
-                comments = obj.items.slice();
+        // fill comments
+        for (var i = 0; i < 6; i++) {
+            padding = 40 + 30*i;
+            var popcorn = document.createElement("div");
+            popcorn.style.position = "absolute";
+            popcorn.style.paddingTop = padding.toString() + "px";
+            popcorn.style.color = "white";
+            popcorn.style.fontSize = "16px";
+            popcorn.style.overflow = "hidden";
+            popcorn.style.whiteSpace = "nowrap";
+            updateComment(popcorn);
+    
+            frame.appendChild(popcorn);
+            layers.push(popcorn);
 
-                // fill comments
-                for (var i = 0; i < 6; i++) {
-                    padding = 40 + 30*i;
-                    var popcorn = document.createElement("div");
-                    popcorn.style.position = "absolute";
-                    popcorn.style.paddingTop = padding.toString() + "px";
-                    popcorn.style.color = "white";
-                    popcorn.style.fontSize = "16px";
-                    popcorn.style.overflow = "hidden";
-                    popcorn.style.whiteSpace = "nowrap";
-                    updateComment(popcorn);
-            
-                    frame.appendChild(popcorn);
-                    layers.push(popcorn);
-            
-            
-                    console.log(popcorn.textContent);
-            
-            
-                    // scrolling comment
-                    var init = 0 - popcorn.offsetWidth;
-            
-                    pos.push(init);
-            
-                }
-
-                var id = setInterval(move, 10);
-
-            }
-                
+            // scrolling comment
+            var init = 0 - popcorn.offsetWidth;
+    
+            pos.push(init);
+    
         }
-        if (params) {
-            xmlHttp.open("GET", url+"?video-id="+params, true);
-            xmlHttp.send(null);
-        }
+
+        var id = setInterval(move, 10);
+
     }
     
  
@@ -83,7 +79,7 @@
     var pauseObserver = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             if (mutation.type === "attributes" && mutation.attributeName === "aria-label") {
-                console.log(mutation);
+                // console.log(mutation);
                 isPaused = !isPaused;
             }
         });
@@ -106,7 +102,7 @@
                     updateComment(layers[i]);
                     pos[i] = 0 - layers[i].offsetWidth;
 
-                    console.log(layers[i].textContent);
+                    // console.log(layers[i].textContent);
                     
                 } else {
                     pos[i]++;
@@ -122,12 +118,33 @@
     function updateComment(elem) {
         if (comments.length == 0) {
             comments = httpRes.slice();
-            console.log("updated");
-            console.log(httpRes.length);
+            // console.log("updated");
         }
         elem.textContent = comments.shift();
         elem.style.right = (-elem.offsetWidth).toString() + "px";
     }
 
-   
+
+    // feature 2: highlight snippet
+    // TODO: http response
+    var intervals = [[15, 20], [37, 40], [80, 95]];
+
+    var progressContainer = document.getElementsByClassName("ytp-progress-bar-container").item(0);
+    var highlightContainer = document.createElement("div");
+    highlightContainer.style.display = "block";
+    highlightContainer.style.position = "relative";
+    highlightContainer.style.overflow = "hidden";
+    highlightContainer.style.backgroundColor = "#EB3223"; // bgd color
+    highlightContainer.style.height = "3px";
+    highlightContainer.style.width = frame.offsetWidth;
+    highlightContainer.style.top = "-2px";
+    
+    progressContainer.appendChild(highlightContainer);
+
+    for (interval in intervals) {
+        // TODO add separate divs?
+
+        // var highlight = document.createElement("div");
+    }
+
 })();
