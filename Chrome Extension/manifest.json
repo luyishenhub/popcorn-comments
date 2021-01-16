@@ -13,7 +13,8 @@
     "permissions": [
         "tabs",
         "storage",
-        "activeTab"
+        "activeTab",
+        "https://us-central1-popcorn-comments.cloudfunctions.net/*"
     ],
     "content_scripts": [
         {
