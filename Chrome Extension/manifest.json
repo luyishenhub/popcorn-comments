@@ -1,0 +1,24 @@
+{
+    "name": "test",
+    "version": "1.0",    
+    "description": "test desc 123",
+    "manifest_version": 2,
+    "browser_action": {        
+        "default_popup": "popup.html"       
+    },
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "permissions": [
+        "tabs",
+        "storage",
+        "activeTab"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["https://*/*"],
+            "js": ["inject.js"]
+        }
+    ]
+}
