@@ -154,12 +154,11 @@
         console.log(intervals.length);
 
         for (var i = 0; i < intervals.length; i++) {
-            // TODO add separate divs?
             interval = intervals[i];
             console.log(interval);
     
             var transparent = createNewHighlight(interval[0] - end, "");
-            var highlight = createNewHighlight(interval[1] - interval[0], "#rgba(235, 50, 35, 0.5)");
+            var highlight = createNewHighlight(interval[1] - interval[0], "rgba(235, 50, 35, 0.5)");
     
             highlightContainer.appendChild(transparent);
             highlightContainer.appendChild(highlight);
