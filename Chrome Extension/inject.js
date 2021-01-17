@@ -33,7 +33,7 @@
     var commentHTTPURL = "https://us-central1-popcorn-comments.cloudfunctions.net/get-popcorn-comments?video-id=" + params;
 
 
-    // httpGetAsync(commentHTTPURL, loadComments);
+    httpGetAsync(commentHTTPURL, loadComments);
  
     // http request to fetch all comments
     function getVideoID(url){
@@ -56,6 +56,7 @@
             popcorn.style.paddingTop = padding.toString() + "px";
             popcorn.style.color = "white";
             popcorn.style.fontSize = "16px";
+            popcorn.style.fontWeight = "bold";
             popcorn.style.overflow = "hidden";
             popcorn.style.whiteSpace = "nowrap";
             updateComment(popcorn);
@@ -128,23 +129,66 @@
     // feature 2: highlight snippet
     // TODO: http response
     var intervals = [[15, 20], [37, 40], [80, 95]];
+    var end = 0;
+
+    var intervalHTTPURL = "https://us-central1-popcorn-comments.cloudfunctions.net/get-most-watched-intervals";
+
+    httpGetAsync(intervalHTTPURL, displayHighlight);
 
     var progressContainer = document.getElementsByClassName("ytp-progress-bar-container").item(0);
     var highlightContainer = document.createElement("div");
-    highlightContainer.style.display = "block";
+    highlightContainer.style.display = "flex";
     highlightContainer.style.position = "relative";
     highlightContainer.style.overflow = "hidden";
-    highlightContainer.style.backgroundColor = "#EB3223"; // bgd color
-    highlightContainer.style.height = "3px";
+    highlightContainer.style.height = "5px";
     highlightContainer.style.width = frame.offsetWidth;
-    highlightContainer.style.top = "-2px";
+    highlightContainer.style.top = "-4px";
     
     progressContainer.appendChild(highlightContainer);
 
-    for (interval in intervals) {
-        // TODO add separate divs?
+    function displayHighlight(responseText) {
+        const obj = JSON.parse(responseText);
 
-        // var highlight = document.createElement("div");
+        intervals = obj.intervals;
+        
+        console.log(intervals.length);
+
+        for (var i = 0; i < intervals.length; i++) {
+            // TODO add separate divs?
+            interval = intervals[i];
+            console.log(interval);
+    
+            var transparent = createNewHighlight(interval[0] - end, "");
+            var highlight = createNewHighlight(interval[1] - interval[0], "#rgba(235, 50, 35, 0.5)");
+    
+            highlightContainer.appendChild(transparent);
+            highlightContainer.appendChild(highlight);
+            end = interval[1];
+        }
+    
+        var transparent = createNewHighlight(100 - end, "");
+    
+        highlightContainer.appendChild(transparent);
+
     }
+
+    function createNewHighlight(grow, color) {
+        var highlight = document.createElement("div");
+        highlight.style.flexGrow = grow;
+        highlight.style.height = "5px";
+        highlight.style.backgroundColor = color;
+        return highlight;
+    }
+
+    // feature 3: translate comments
+    var targetLocale = window.navigator.language;
+    console.log(targetLocale);
+
+    // var commentList = document.getElementById('contents').children;
+
+    // for (commentNode in commentList) {
+
+    // }
+
 
 })();
