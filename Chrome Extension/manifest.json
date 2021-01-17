@@ -1,7 +1,7 @@
 {
-    "name": "test",
+    "name": "Popcorn Comments",
     "version": "1.0",    
-    "description": "test desc 123",
+    "description": "Popcorn comments :)",
     "manifest_version": 2,
     "browser_action": {        
         "default_popup": "popup.html"       
