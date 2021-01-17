@@ -121,8 +121,19 @@
             comments = httpRes.slice();
             // console.log("updated");
         }
-        elem.textContent = comments.shift();
+        elem.textContent = formatComment(comments.shift());
         elem.style.right = (-elem.offsetWidth).toString() + "px";
+    }
+
+    function formatComment(text) {
+        // remove links, line breaks, tags, quotations
+        var ret = text.replace(/<a *<\/a>/g, "")
+                    .replace(/<br \/>/g, "")
+                    .replace(/<b>/g, "").replace(/<\/b>/g, "")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#39;/g, "'")
+        // replace single
+        return ret;
     }
 
 
