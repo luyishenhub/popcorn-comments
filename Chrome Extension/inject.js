@@ -140,9 +140,9 @@
     highlightContainer.style.display = "flex";
     highlightContainer.style.position = "relative";
     highlightContainer.style.overflow = "hidden";
-    highlightContainer.style.height = "5px";
+    highlightContainer.style.height = "50px";
     highlightContainer.style.width = frame.offsetWidth;
-    highlightContainer.style.top = "-4px";
+    highlightContainer.style.top = "4px";
     
     progressContainer.appendChild(highlightContainer);
 
@@ -158,7 +158,7 @@
             console.log(interval);
     
             var transparent = createNewHighlight(interval[0] - end, "");
-            var highlight = createNewHighlight(interval[1] - interval[0], "rgba(235, 50, 35, 0.5)");
+            var highlight = createNewHighlight(interval[1] - interval[0], "rgba(235, 50, 35, 0.3)");
     
             highlightContainer.appendChild(transparent);
             highlightContainer.appendChild(highlight);
@@ -174,7 +174,7 @@
     function createNewHighlight(grow, color) {
         var highlight = document.createElement("div");
         highlight.style.flexGrow = grow;
-        highlight.style.height = "5px";
+        highlight.style.height = "50px";
         highlight.style.backgroundColor = color;
         return highlight;
     }
