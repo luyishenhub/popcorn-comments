@@ -14,9 +14,6 @@ Hack the North 2020++ Project
 https://devpost.com/software/popcorn-comments?ref_content=user-portfolio&ref_feature=in_progress
 ```
 
-## Sample Effect
-
-
 ## System Structure
 ![Hack the North 2020 Flowchart](https://user-images.githubusercontent.com/46879202/105663475-58a63d00-5ea0-11eb-8811-2946cc6016ea.png)
 
