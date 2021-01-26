@@ -5,8 +5,8 @@ def hello_world(request):
     if request.args and 'video-id' in request.args:
         video_id = request.args.get('video-id')
         headers = {"Accept": "application/json", "Access-Control-Allow-Origin": "*"}
-        url = "https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=" + str(video_id) + "&key=AIzaSyBhdUAUtiWVNv3LrKrXM6wqreGnftKijuw"
-        #url = "https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=_-rUZu0R_Ww&key=AIzaSyBhdUAUtiWVNv3LrKrXM6wqreGnftKijuw"
+        url = "https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=" + str(video_id) + "&key=REDACTED"
+        #url = "https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=_-rUZu0R_Ww&key=REDACTED"
         data = requests.get(url, headers=headers)
         l = []
         js = data.json()
